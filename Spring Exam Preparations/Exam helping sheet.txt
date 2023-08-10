@@ -1,0 +1,153 @@
+Exam pre-written files:
+
+1.application.properties
+#Data Source Properties
+spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/spring_data_intro?useSSL=false&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=TRUE
+spring.datasource.username=root
+spring.datasource.password=0244070002
+#JPA Properties
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.properties.hibernate.format_sql=TRUE
+spring.jpa.hibernate.ddl-auto=update
+###Logging Levels
+# Disable the default loggers
+logging.level.org=WARN
+logging.level.blog=WARN
+#Show SQL executed with parameter bindings
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor=TRACE
+
+
+2.ValidationUtilImpl
+@Override
+    public <E> boolean isValid(E entity) {
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+        return validator.validate(entity).isEmpty();
+    }
+
+
+3.GsonBean
+ @Bean
+    public Gson gson() {
+        return new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .setPrettyPrinting()
+                .create();
+    }
+
+
+4.XmlParser
+   @Override
+    @SuppressWarnings("unchecked")
+    public <T> T fromFile(String filePath, Class<T> tClass) throws JAXBException, FileNotFoundException {
+        JAXBContext context = JAXBContext.newInstance(tClass);
+
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+
+        return (T) unmarshaller.unmarshal(new FileReader(filePath));
+    }
+
+
+5.Pom.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.5.3</version>
+    <relativePath/> <!-- lookup parent from repository -->
+</parent>
+<groupId>su</groupId>
+<artifactId>RealDeal</artifactId>
+<version>0.0.1-SNAPSHOT</version>
+<name>RealDeal</name>
+<description>Spring Data exam</description>
+<properties>
+    <java.version>16</java.version>
+</properties>
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.modelmapper</groupId>
+        <artifactId>modelmapper</artifactId>
+        <version>2.4.2</version>
+    </dependency>
+    <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.8.6</version>
+    </dependency>
+    <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.3.1</version>
+    </dependency>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
+</build>
+
+</project>
+
+
+
+
+6.ModelMapper
+ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.addConverter(new Converter<String, LocalDate>()  {
+            @Override
+            public LocalDate convert(MappingContext<String, LocalDate> mappingContext) {
+                return LocalDate
+                        .parse(mappingContext.getSource(),
+                                DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            }
+        });
